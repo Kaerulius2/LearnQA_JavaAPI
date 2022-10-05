@@ -6,9 +6,6 @@ public class HelloWorldTest {
 
     @Test
     public void helloWorldTest(){
-      Response response = RestAssured
-              .get("https://playground.learnqa.ru/api/hello")
-              .andReturn();
-      response.prettyPrint();
+      System.out.println("Hello from Alexander Golubkov!");
     }
 }
