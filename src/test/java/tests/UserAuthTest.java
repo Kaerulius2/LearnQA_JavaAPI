@@ -69,24 +69,13 @@ public class UserAuthTest extends BaseTestCase {
        Assertions.assertJsonByName(responseForCheck,"user_id", 0);
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"badstring10", "goodstringforgoodtest23", "charsfortest_15", "charsfortest__16"})
+    public void testStringLength(String string){
 
+        Assertions.assertStringByLenght(string,15);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    }
 
 
 
