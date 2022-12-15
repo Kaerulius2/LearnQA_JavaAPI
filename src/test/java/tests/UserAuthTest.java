@@ -62,6 +62,16 @@ public class UserAuthTest extends BaseTestCase {
         Assertions.assertCookieByName(responseCheckCookie,"HomeWork","hw_value");
     }
 
+    @Test
+    public void testHomeworkHeader(){
+        Response responseCheckHeader = RestAssured
+                .get("https://playground.learnqa.ru/api/homework_header")
+                .andReturn();
+
+        System.out.println(responseCheckHeader.getHeaders());
+        Assertions.assertHeaderByName(responseCheckHeader,"x-secret-homework-header","Some secret value");
+    }
+
 
     @ParameterizedTest
     @ValueSource(strings = {"cookie", "headers"})

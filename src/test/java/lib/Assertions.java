@@ -27,6 +27,16 @@ public class Assertions {
 
     }
 
+    public static void assertHeaderByName(Response Response, String  name, String expectedValue){
+        //в принципе можно не делать первую проверку, в assertEquals тест упадет, т.к. при отсутствии куки и значение будет null
+        //но мы сделаем
+        assertTrue(Response.headers().hasHeaderWithName(name), "Header "+name+" is not present");
+
+        String value = Response.getHeader(name);
+        assertEquals(expectedValue, value, "Header value is not equal to expected value");
+
+    }
+
     public static void assertStringByLenght(String string, int length)
     {
         assertTrue(string.length()>length,"String length is more than " + length);
