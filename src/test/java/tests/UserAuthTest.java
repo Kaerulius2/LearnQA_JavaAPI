@@ -51,6 +51,18 @@ public class UserAuthTest extends BaseTestCase {
        Assertions.assertJsonByName(responseCheckAuth, "user_id", this.userIdOnAuth);
     }
 
+    @Test
+    public void testHomeworkCookie(){
+        Response responseCheckCookie = RestAssured
+                .get("https://playground.learnqa.ru/api/homework_cookie")
+                .andReturn();
+
+        System.out.println(responseCheckCookie.getCookies());
+
+        Assertions.assertCookieByName(responseCheckCookie,"HomeWork","hw_value");
+    }
+
+
     @ParameterizedTest
     @ValueSource(strings = {"cookie", "headers"})
     public void testNegativeAuthUser(String condition){
