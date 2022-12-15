@@ -30,7 +30,7 @@ public class HelloWorldTest {
                 .when().get("https://en.wikipedia.org/wiki/List_of_the_most_common_passwords").then().contentType(ContentType.HTML).extract()
                 .response();
         assertEquals(response.getStatusCode(), 200);
-        //response.getBody().prettyPrint();
+  
         XmlPath htmlPath = new XmlPath(HTML, response.getBody().asString());
 
         String table = htmlPath.getString("**.findAll { it.@class == 'wikitable' }[1]");
