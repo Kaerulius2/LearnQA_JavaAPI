@@ -42,4 +42,16 @@ public class Assertions {
         assertTrue(string.length()>length,"String length is more than " + length);
     }
 
+    public static void assertUserAgentByParams(Response response, String platform, String browser, String device) {
+        response.then().assertThat().body("$", hasKey("platform"));
+        response.then().assertThat().body("$", hasKey("browser"));
+        response.then().assertThat().body("$", hasKey("device"));
+        String platformForCheck = response.jsonPath().getString("platform");
+        String browserForCheck = response.jsonPath().getString("browser");
+        String deviceForCheck = response.jsonPath().getString("device");
+
+        assertEquals(platform, platformForCheck, "Platform value is not equal to expected value");
+        assertEquals(browser, browserForCheck, "Browser value is not equal to expected value");
+        assertEquals(device, deviceForCheck, "Device value is not equal to expected value");
+    }
 }

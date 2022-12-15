@@ -1,6 +1,7 @@
 package tests;
 
 import io.restassured.RestAssured;
+import io.restassured.http.Header;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -8,6 +9,8 @@ import lib.BaseTestCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import lib.Assertions;
 import java.util.HashMap;
@@ -99,7 +102,20 @@ public class UserAuthTest extends BaseTestCase {
 
     }
 
+    @ParameterizedTest
+    @ArgumentsSource(testDataProvider.class)
+    public void testUserAgent(String userAgent, String platform, String browser, String device){
 
+        Header header = new Header("user-agent",userAgent);
+        RequestSpecification spec = RestAssured.given();
+        spec.header(header);
+        spec.baseUri("https://playground.learnqa.ru/ajax/api/user_agent_check");
+        Response responseForCheck = spec.get().andReturn();
+
+        responseForCheck.prettyPrint();
+
+        Assertions.assertUserAgentByParams(responseForCheck, platform,browser, device);
+    }
 
 
 
