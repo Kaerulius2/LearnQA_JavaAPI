@@ -36,6 +36,7 @@ public class HelloWorldTest {
         String table = htmlPath.getString("**.findAll { it.@class == 'wikitable' }[1]");
         String[] passwords = table.split("\n");
 
+        //теперь в passwords[] лежат пароли и немного мусора - заголовок, номера, но и все данные тоже
 
         String login = "super_admin";
         String authResp;
@@ -83,6 +84,4 @@ public class HelloWorldTest {
         System.out.println("CORRECT PASSWORD: " + body.get("password"));
 
     }
-
-
 }
