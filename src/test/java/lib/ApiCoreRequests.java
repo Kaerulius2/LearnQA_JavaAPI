@@ -3,6 +3,7 @@ package lib;
 import io.qameta.allure.Step;
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.http.Header;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 
 import java.util.Map;
@@ -19,6 +20,8 @@ public class ApiCoreRequests {
                 .get(url)
                 .andReturn();
    }
+
+
 
     @Step("Make a GET-request with cookie only")
     public Response makeGetRequestsWithCookie(String url, String cookie){
@@ -52,6 +55,35 @@ public class ApiCoreRequests {
                 .filter(new AllureRestAssured())
                 .body(authData)
                 .post(url)
+                .andReturn();
+    }
+
+    @Step("Make a POST-request with JSON path")
+    public JsonPath makePostRequestsJSON(String url, Map<String,String> authData){
+        return given()
+                .filter(new AllureRestAssured())
+                .body(authData)
+                .post(url)
+                .jsonPath();
+    }
+
+    @Step("Make a PUT-request")
+    public Response makePutRequests(String url, Map<String,String> authData){
+        return given()
+                .filter(new AllureRestAssured())
+                .body(authData)
+                .put(url)
+                .andReturn();
+    }
+
+    @Step("Make a PUT-request with cookie and token")
+    public Response makePutRequestsWithTokenAndCookie(String url, Map<String,String> authData, String token, String cookie){
+        return given()
+                .filter(new AllureRestAssured())
+                .header(new Header("x-csrf-token", token))
+                .cookie("auth_sid", cookie)
+                .body(authData)
+                .put(url)
                 .andReturn();
     }
 }
