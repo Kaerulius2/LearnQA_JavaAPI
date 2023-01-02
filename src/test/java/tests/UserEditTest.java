@@ -1,5 +1,6 @@
 package tests;
 
+import io.qameta.allure.*;
 import io.restassured.RestAssured;
 import io.restassured.http.Cookie;
 import io.restassured.http.Header;
@@ -9,13 +10,20 @@ import lib.ApiCoreRequests;
 import lib.Assertions;
 import lib.BaseTestCase;
 import lib.DataGenerator;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Epic("User edit cases")
+@Feature("Edit User Info")
 public class UserEditTest extends BaseTestCase {
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
+    @Description("This test successfully edit user. New FirstName.")
+    @DisplayName("Test positive edit user - PUT")
+    @Severity(SeverityLevel.NORMAL)
+    @Link("https://JIRA.ru/333556")
     @Test
     public void testEditJustCreatedTest(){
     //GENERATE USER
@@ -64,6 +72,10 @@ public class UserEditTest extends BaseTestCase {
         Assertions.assertJsonByName(responseUserData, "firstName", newName);
     }
 
+    @Description("This negative test to edit user. Firstname is the same")
+    @DisplayName("Test negative edit user - no auth")
+    @Severity(SeverityLevel.BLOCKER)
+    @Link("https://JIRA.ru/333456")
     @Test
     public void testEditWithoutAuth(){
         //GENERATE USER
@@ -119,6 +131,10 @@ public class UserEditTest extends BaseTestCase {
 
     }
 
+    @Description("This negative test to edit user. Firstname is the same")
+    @DisplayName("Test negative edit user - auth from other user")
+    @Severity(SeverityLevel.BLOCKER)
+    @Link("https://JIRA.ru/333457")
     @Test
     public void testEditWithOtherUserAuth(){
         //GENERATE USER
@@ -183,6 +199,11 @@ public class UserEditTest extends BaseTestCase {
         Assertions.assertJsonByName(responseUserData, "firstName", oldName);
 
     }
+
+    @Description("This negative test to edit user. Email without @")
+    @DisplayName("Test negative edit user - bad email")
+    @Severity(SeverityLevel.CRITICAL)
+    @Link("https://JIRA.ru/333459")
     @Test
     public void testEditWithBadEmail(){
         //GENERATE USER
@@ -240,6 +261,10 @@ public class UserEditTest extends BaseTestCase {
 
     }
 
+    @Description("This negative test to edit user. Firstname is too short")
+    @DisplayName("Test negative edit user - bad firstname")
+    @Severity(SeverityLevel.CRITICAL)
+    @Link("https://JIRA.ru/3334779")
     @Test
     public void testEditWithBadFirstName(){
         //GENERATE USER

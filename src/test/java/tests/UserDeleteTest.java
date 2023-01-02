@@ -1,20 +1,28 @@
 package tests;
 
+import io.qameta.allure.*;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import lib.ApiCoreRequests;
 import lib.Assertions;
 import lib.BaseTestCase;
 import lib.DataGenerator;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Epic("Registration cases")
+@Feature("Registration")
 public class UserDeleteTest extends BaseTestCase {
 
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
 
+    @Description("This test negative delete user blocked to delete")
+    @DisplayName("Test negative DELETE - lock user")
+    @Severity(SeverityLevel.BLOCKER)
+    @Link("https://JIRA.ru/123456")
     @Test
     public void deleteLockUserTest(){
         //LOGIN
@@ -47,6 +55,10 @@ public class UserDeleteTest extends BaseTestCase {
         Assertions.assertJsonHasFields(responseGetDeleted,fields);
     }
 
+    @Description("This test success delete user")
+    @DisplayName("Test positive DELETE")
+    @Severity(SeverityLevel.MINOR)
+    @Link("https://JIRA.ru/123456")
     @Test
     public void deleteNewUserSuccessfully(){
         //GENERATE USER
@@ -88,6 +100,10 @@ public class UserDeleteTest extends BaseTestCase {
         Assertions.assertResponseTextEquals(responseGetDeleted,"User not found");
     }
 
+    @Description("This test negative delete user - wrong auth data from othet user")
+    @DisplayName("Test negative DELETE - wrong auth")
+    @Severity(SeverityLevel.NORMAL)
+    @Link("https://JIRA.ru/223456")
     @Test
     public void deleteNewUserFromOtherAuth(){
         //GENERATE USER

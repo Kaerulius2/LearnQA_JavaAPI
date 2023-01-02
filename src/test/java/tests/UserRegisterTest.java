@@ -1,8 +1,6 @@
 package tests;
 
-import io.qameta.allure.Description;
-import io.qameta.allure.Epic;
-import io.qameta.allure.Feature;
+import io.qameta.allure.*;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import lib.ApiCoreRequests;
@@ -25,6 +23,8 @@ public class UserRegisterTest extends BaseTestCase {
 
     @Description("This test negative register user by existing email")
     @DisplayName("Test negative register - ex.email")
+    @Severity(SeverityLevel.CRITICAL)
+    @Link("https://JIRA.ru/33344779")
     @Test
     public void testCreateUserWithExistingEmail(){
         String email = "vinkotov@example.com";
@@ -46,6 +46,8 @@ public class UserRegisterTest extends BaseTestCase {
 
     @Description("This test negative register user without one field")
     @DisplayName("Test negative register - less fields")
+    @Severity(SeverityLevel.TRIVIAL)
+    @Link("https://JIRA.ru/3331279")
     @ParameterizedTest
     @ValueSource(strings = {"email", "password", "firstName", "lastName", "username"})
     public void testNegativeAuthUserWithoutOneField(String field){
@@ -64,6 +66,8 @@ public class UserRegisterTest extends BaseTestCase {
 
     @Description("This test negative register user by wrong email format")
     @DisplayName("Test negative register - wrong email")
+    @Severity(SeverityLevel.MINOR)
+    @Link("https://JIRA.ru/3331255")
     @Test
     public void testCreateUserWithWrongEmail(){
         String email = "agolubkovtest.ru";
@@ -83,6 +87,8 @@ public class UserRegisterTest extends BaseTestCase {
 
     @Description("This test negative register user by very short username")
     @DisplayName("Test negative register - short username")
+    @Severity(SeverityLevel.TRIVIAL)
+    @Link("https://JIRA.ru/33312791")
     @Test
     public void testCreateUserWithShortUsername(){
         String username = "a";
@@ -102,6 +108,8 @@ public class UserRegisterTest extends BaseTestCase {
 
     @Description("This test negative register user by very long username")
     @DisplayName("Test negative register - long username")
+    @Severity(SeverityLevel.TRIVIAL)
+    @Link("https://JIRA.ru/3331249")
     @Test
     public void testCreateUserWithLongUsername(){
         String username = "WjfBjBVoQPGrBjaHucDrRnkmLwHkqqBYWhCAGFacSxjDgRSaekJcIKaypRZspqeNvncbpdokBUMswuweiMkVqpHpxWSkVQJTMUQcawcKCTjDCgkfBdYo" +
@@ -122,6 +130,8 @@ public class UserRegisterTest extends BaseTestCase {
 
     @Description("This test successfully register user by random email")
     @DisplayName("Test POSITIVE register user")
+    @Severity(SeverityLevel.CRITICAL)
+    @Link("https://JIRA.ru/3331279")
     @Test
     public void testCreateUserSuccessfully(){
 
